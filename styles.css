@@ -11,10 +11,11 @@ body * {
 header {
     height: 10vh;
     display: flex;
-    justify-content: center;
+    justify-content: space-between;
     align-items: center;
     border-bottom: solid 1px #CCC;
     background-color: #F4F4F4;
+    padding: 0 30px;
 }
 
 main {
@@ -30,9 +31,9 @@ h1, h2, h3 {
 
 select {
     padding: 10px;
-    position: absolute;
+    /* position: absolute;
     margin-left: -275px;
-    margin-top: -5px;
+    margin-top: -5px; */
 }
 
 #cy {
