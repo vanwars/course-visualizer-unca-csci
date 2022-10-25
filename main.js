@@ -1,8 +1,9 @@
 const elements = {
     nodes: [
-        { data: { id: '182', title: 'Intro to Programming: Media Computation', dependencies: 3, minor: true, info: true, systems: true } },
-        { data: { id: '183', title: 'Intro to Programming: Numerical Methods', dependencies: 0, minor: true, info: true, systems: true } },
-        { data: { id: '185', title: 'Intro to Programming: Web Development', dependencies: 0, minor: true, info: true, systems: true } },
+        { data: { id: '182', parent: '18X', title: 'Intro to Programming: Media Computation', dependencies: 0, minor: true, info: true, systems: true } },
+        { data: { id: '183', parent: '18X', title: 'Intro to Programming: Numerical Methods', dependencies: 0, minor: true, info: true, systems: true } },
+        { data: { id: '185', parent: '18X', title: 'Intro to Programming: Web Development', dependencies: 0, minor: true, info: true, systems: true } },
+        { data: { id: '18X', title: 'Introductory Programming (Either 182 or 183 or 185)', dependencies: 3, minor: true, info: true, systems: true } },
         { data: { id: '201', title: 'Intro to OOP', dependencies: 2, minor: true, info: true, systems: true } },
         { data: { id: '202', title: 'Intro to Data Structures', dependencies: 9, minor: true, info: true, systems: true } },
         { data: { id: '235', title: 'Intro to Systems', dependencies: 2, minor: true, info: true, systems: true } },
@@ -22,9 +23,9 @@ const elements = {
         { data: { id: '481', title: 'Capstone II', dependencies: 0, info: true, systems: true } }
     ],
     edges: [
-        { data: { target: '235', source: '182' } },
-        { data: { target: '329', source: '182' } },
-        { data: { target: '344', source: '182' } },
+        { data: { target: '235', source: '18X' } },
+        { data: { target: '329', source: '18X' } },
+        { data: { target: '344', source: '18X' } },
         { data: { target: '202', source: '201' } },
         { data: { target: '235', source: '201' } },
         { data: { target: '280', source: '202' } },
@@ -117,22 +118,44 @@ function draw() {
                 style: {
                     'background-color': function (element) {
                         const data = element.data();
-                        if (data.hasTaken) {
+                        if (data.hasTaken || data.id === '18X') {
                             return "#EEE";
                         } else {
                             return colors[key]
                         }
                     },
                     'label': function (element) {
+                        const data = element.data();
+                        if (data.id === '18X') {
+                            return "Pick One"
+                        }
                         return element.data().id;
                     },
-                    'text-valign': 'center',
-                    'text-halign': 'center',
-                    'font-size': '22px',
+                    'text-valign': function (element) {
+                        const data = element.data();
+                        if (data.id === '18X') {
+                            return 'top'
+                        }
+                        return 'center'
+                    },
+                    'text-halign': function (element) {
+                        const data = element.data();
+                        if (data.id === '18X') {
+                            return 'center'
+                        }
+                        return 'center'
+                    },
+                    'font-size': function (element) {
+                        const data = element.data();
+                        if (data.id === '18X') {
+                            return '30px'
+                        }
+                        return '22px'
+                    },
                     'font-weight': 'bold',
                     'color': function (element) {
                         const data = element.data();
-                        if (data.hasTaken) {
+                        if (data.hasTaken || data.id === '18X') {
                             return "#444";
                         } else {
                             return textColors[key]
