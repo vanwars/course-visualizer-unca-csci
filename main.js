@@ -50,7 +50,8 @@ const elements = {
     ready: function(){
       this.nodes().forEach(function(node) {
         const dependencies = node.data().dependencies;
-        let size = 100 + dependencies * 30;
+        console.log(dependencies + 2, Math.log2(dependencies + 2) * 100)
+        let size = Math.log2(dependencies + 2) * 75 + 20; // + dependencies * 30;
         node.css("width", size);
         node.css("height", size);
       });
@@ -84,7 +85,7 @@ const elements = {
       {
         selector: 'edge',
         style: {
-          'width': 8,
+          'width': 6,
           'target-arrow-shape': 'triangle',
           'line-color': '#888',
           'target-arrow-color': '#888',
@@ -98,11 +99,9 @@ const elements = {
   cy.on('click', 'node', (e) => {
     const data = e.target.data();
 
-    document.querySelector('#info').innerHTML = `
-      <section class="card">
-        <h2>${data.title}</h2>
+    document.querySelector('.course-info').innerHTML = `
+        <h3>${data.title}</h3>
         <p>text text text text
-      </section>
     `
     //alert(e.target.data().title);
   });
