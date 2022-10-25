@@ -20,7 +20,7 @@ header {
 
 main {
     display: grid;
-    grid-template-columns: 70vw auto;
+    grid-template-columns: 65vw auto;
     min-height: 90vh;
 }
 
@@ -45,4 +45,27 @@ select {
     background-color: #F4F4F4;
     padding: 20px;
     border-left: solid 1px #CCC;
+}
+
+#info span {
+    display: inline-block;
+    margin-right: 10px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    padding: 5px 10px;
+    background-color: #CCC;
+    font-size: 0.9em;
+    text-transform: uppercase;
+}
+
+#info span.info {
+    background-color: #6a8e7f;
+    color: white;
+}
+#info span.systems {
+    background-color: #413C58;
+    color: white;
+}
+#info span.minor {
+    background-color: #EFCB68;
 }

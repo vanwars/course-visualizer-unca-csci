@@ -1,11 +1,11 @@
 const elements = {
     nodes: [
-        { data: { id: '182', title: 'Intro to Programming: Media Computation', dependencies: 3, hasTaken: true, minor: true, info: true, systems: true } },
-        { data: { id: '183', title: 'Intro to Programming: Numerical Methods', dependencies: 0, hasTaken: true, minor: true, info: true, systems: true } },
-        { data: { id: '185', title: 'Intro to Programming: Web Development', dependencies: 0, hasTaken: true, minor: true, info: true, systems: true } },
-        { data: { id: '201', title: 'Intro to OOP', dependencies: 2, hasTaken: true, minor: true, info: true, systems: true } },
-        { data: { id: '202', title: 'Intro to Data Structures', dependencies: 9, hasTaken: true, minor: true, info: true, systems: true } },
-        { data: { id: '235', title: 'Intro to Systems', dependencies: 2, hasTaken: true, minor: true, info: true, systems: true } },
+        { data: { id: '182', title: 'Intro to Programming: Media Computation', dependencies: 3, minor: true, info: true, systems: true } },
+        { data: { id: '183', title: 'Intro to Programming: Numerical Methods', dependencies: 0, minor: true, info: true, systems: true } },
+        { data: { id: '185', title: 'Intro to Programming: Web Development', dependencies: 0, minor: true, info: true, systems: true } },
+        { data: { id: '201', title: 'Intro to OOP', dependencies: 2, minor: true, info: true, systems: true } },
+        { data: { id: '202', title: 'Intro to Data Structures', dependencies: 9, minor: true, info: true, systems: true } },
+        { data: { id: '235', title: 'Intro to Systems', dependencies: 2, minor: true, info: true, systems: true } },
         { data: { id: '280', title: 'Computer Science Seminar', dependencies: 1, info: true, systems: true, systems: true } },
         { data: { id: '312', title: 'Artificial Intelligence', dependencies: 0 } },
         { data: { id: '329', title: 'Big Data Analytics', dependencies: 0 } },
@@ -45,6 +45,20 @@ const elements = {
     ]
 };
 
+const colors = {
+    'info': '#6a8e7f',
+    'systems': '#413C58',
+    'minor': '#EFCB68',
+    '': '#CCC'
+}
+
+const textColors = {
+    'info': 'white',
+    'systems': 'white',
+    'minor': '#444',
+    '': '#444'
+}
+
 
 function getCoursesForSpecialization(elements, key) {
     if (!key) {
@@ -79,7 +93,7 @@ function getCoursesForSpecialization(elements, key) {
 }
 
 function draw() {
-
+    const key = document.querySelector('select').value;
     document.querySelector('#cy').innerHTML = "";
     var cy = window.cy = cytoscape({
         container: document.getElementById('cy'),
@@ -103,7 +117,11 @@ function draw() {
                 style: {
                     'background-color': function (element) {
                         const data = element.data();
-                        return data.hasTaken ? "#EEE" : "teal"
+                        if (data.hasTaken) {
+                            return "#EEE";
+                        } else {
+                            return colors[key]
+                        }
                     },
                     'label': function (element) {
                         return element.data().id;
@@ -114,7 +132,11 @@ function draw() {
                     'font-weight': 'bold',
                     'color': function (element) {
                         const data = element.data();
-                        return data.hasTaken ? "#444" : "white"
+                        if (data.hasTaken) {
+                            return "#444";
+                        } else {
+                            return textColors[key]
+                        }
                     }
                 }
             },
@@ -130,7 +152,7 @@ function draw() {
                 }
             }
         ],
-        elements: getCoursesForSpecialization(elements, document.querySelector('select').value)
+        elements: getCoursesForSpecialization(elements, key)
     });
 
 
@@ -139,7 +161,11 @@ function draw() {
 
         document.querySelector('.course-info').innerHTML = `
             <h3>${data.title}</h3>
-            <p>text text text text
+            <p>Some description of the course...</p>
+            <h4>Required For:</h4>
+            ${data.systems ? '<span class="systems">Computer Systems</span>' : ''}
+            ${data.info ? '<span class="info">Information Systems </span>' : ''}
+            ${data.minor ? '<span class="minor">CS Minor</span>' : ''}
         `
         //alert(e.target.data().title);
     });
