@@ -1,0 +1,178 @@
+<!DOCTYPE>
+
+<html>
+
+  <head>
+    <title>cytoscape-cose-bilkent.js demo (compound)</title>
+
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1, maximum-scale=1">
+
+    <script src="https://unpkg.com/cytoscape/dist/cytoscape.min.js"></script>
+
+    <!-- for testing with local version of cytoscape.js -->
+    <!--<script src="../cytoscape.js/build/cytoscape.js"></script>-->
+
+    <!--polyfills are needed for this extension for old browsers like IE -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/core-js/2.5.7/shim.min.js"></script>
+    <script src="https://unpkg.com/layout-base/layout-base.js"></script>
+    <script src="https://unpkg.com/cose-base/cose-base.js"></script>
+    <script src="cytoscape-cose-bilkent.js"></script>
+
+    <style>
+      body {
+        font-family: helvetica;
+        font-size: 14px;
+      }
+
+      #cy {
+        width: 100%;
+        height: 90%;
+        z-index: 999;
+      }
+
+      h1 {
+        opacity: 0.5;
+        font-size: 1em;
+      }
+
+      button {
+        margin-right: 10px;
+      }
+    </style>
+
+    <script>
+
+const elements = {
+          nodes: [
+            { data: { id: '182', title: 'Intro to Programming: Media Computation', dependencies: 3 } },
+            // { data: { id: '183', title: 'Intro to Programming: Numerical Methods', dependencies: 0 } },
+            // { data: { id: '185', title: 'Intro to Programming: Web Development', dependencies: 0 } },
+            { data: { id: '201', title: 'Intro to OOP', dependencies: 2 } },
+            { data: { id: '202', title: 'Intro to Data Structures', dependencies: 9 } },
+            { data: { id: '235', title: 'Intro to Systems', dependencies: 2 } },
+            { data: { id: '280', title: 'Computer Science Seminar', dependencies: 1 } },
+            { data: { id: '312', title: 'Artificial Intelligence', dependencies: 0  } },
+            { data: { id: '329', title: 'Big Data Analytics', dependencies: 0  } },
+            { data: { id: '333', title: 'Data Structures and Algorithms', dependencies: 0 } },
+            { data: { id: '335', title: 'Systems II', dependencies: 0  } },
+            { data: { id: '338', title: 'Software Engineering', dependencies: 1  } },
+            { data: { id: '343', title: 'Databases', dependencies: 0  } },
+            { data: { id: '344', title: 'Advanced Web Technologies', dependencies: 0  } },
+            { data: { id: '346', title: 'Computer Graphics', dependencies: 0  } },
+            { data: { id: '412', title: 'Computer Vision', dependencies: 0  } },
+            { data: { id: '434', title: 'Theory of Computation', dependencies: 1  } },
+            { data: { id: '431', title: 'Programming Languages', dependencies: 0  } },
+            { data: { id: '480', title: 'Capstone I', dependencies: 1  } },
+            { data: { id: '481', title: 'Capstone II', dependencies: 0  } }
+          ],
+          edges: [
+            { data: { target: '235', source: '182' } },
+            { data: { target: '329', source: '182' } },
+            { data: { target: '344', source: '182' } },
+            { data: { target: '202', source: '201' } },
+            { data: { target: '235', source: '201' } },
+            { data: { target: '280', source: '202' } },
+            { data: { target: '312', source: '202' } },
+            { data: { target: '335', source: '202' } },
+            { data: { target: '333', source: '202' } },
+            { data: { target: '338', source: '202' } },
+            { data: { target: '343', source: '202' } },
+            { data: { target: '346', source: '202' } },
+            { data: { target: '412', source: '202' } },
+            { data: { target: '434', source: '202' } },
+            { data: { target: '335', source: '235' } },
+            { data: { target: '338', source: '235' } },
+            { data: { target: '480', source: '280' } },
+            { data: { target: '431', source: '434' } },
+            { data: { target: '480', source: '338' } },
+            { data: { target: '481', source: '480' } }
+          ]
+        };
+      document.addEventListener('DOMContentLoaded', function(){
+
+        var cy = window.cy = cytoscape({
+          container: document.getElementById('cy'),
+
+          ready: function(){
+            this.nodes().forEach(function(node){
+              let width = [30, 70, 110];
+              let size = width[Math.floor(Math.random()*3)];
+              node.css("width", size);
+              node.css("height", size);
+            });
+            this.layout({name: 'cose-bilkent', animationDuration: 1000}).run();
+          },
+            
+          style: [
+            {
+              selector: 'node',
+              style: {
+                'background-color': 'teal',
+                'label': function (element) {
+                  return element.data().id;
+                },
+                'text-valign': 'center',
+                'text-halign': 'center',
+                'font-size': '22px',
+                'font-weight': 'bold',
+                'color': 'white'
+              }
+            },
+
+            {
+              selector: ':parent',
+              style: {
+                'background-opacity': 0.333
+              }
+            },
+
+            {
+              selector: 'edge',
+              style: {
+                'width': 8,
+                'target-arrow-shape': 'triangle',
+                'line-color': '#888',
+                'target-arrow-color': '#888',
+                'curve-style': 'bezier'
+              }
+            }
+          ],
+
+            elements: elements
+        });
+        document.getElementById("layoutButton").addEventListener("click", function(){
+          var layout = cy.layout({
+            name: 'cose-bilkent',
+            animate: 'end',
+            animationEasing: 'ease-out',
+            animationDuration: 1000,
+            randomize: true
+          });
+
+          layout.run();
+        });
+        document.getElementById("randomize").addEventListener("click", function(){
+          var layout = cy.layout({
+            name: 'random',
+            animate: true,
+            animationDuration: 1000,
+            animationEasing: 'ease-out'
+          });
+
+          layout.run();
+        });
+      });
+    </script>
+  </head>
+
+  <body>
+    <h1>cytoscape-cose-bilkent demo (compound)</h1>
+
+    <button id="randomize" type="button">Randomize</button>
+    <button id="layoutButton" type="button">CoSE-Bilkent</button>
+
+    <div id="cy"></div>
+
+  </body>
+
+</html>

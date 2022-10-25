@@ -1,0 +1,35 @@
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 14px;
+    margin: 0;
+}
+
+body * {
+    box-sizing: border-box;
+}
+
+header {
+    height: 10vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-bottom: solid 1px #CCC;
+    background-color: #F4F4F4;
+}
+
+main {
+    display: grid;
+    grid-template-columns: 70vw auto;
+    min-height: 90vh;
+}
+
+#cy {
+    width: 100%;
+    height: 90vh;
+}
+
+#info {
+    background-color: #F4F4F4;
+    padding: 20px;
+    border-left: solid 1px #CCC;
+}
