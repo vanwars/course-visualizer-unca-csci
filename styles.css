@@ -20,7 +20,7 @@ header {
 
 main {
     display: grid;
-    grid-template-columns: 65vw auto;
+    grid-template-columns: 70vw auto;
     min-height: 90vh;
 }
 
@@ -68,4 +68,12 @@ select {
 }
 #info span.minor {
     background-color: #EFCB68;
+}
+
+.tabs {
+    list-style: none;
+    display: grid;
+    column-gap: 10px;
+    grid-template-columns: repeat(3, auto);
+    width: 350px;
 }

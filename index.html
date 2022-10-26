@@ -10,13 +10,18 @@
     <script src="https://unpkg.com/layout-base/layout-base.js"></script>
     <script src="https://unpkg.com/cose-base/cose-base.js"></script>
     <script src="cytoscape-cose-bilkent.js"></script>
-    <script src="main.js" defer type="text/javascript"></script>
+    <script src="main.js" defer type="module"></script>
     <link rel="stylesheet" href="styles.css">
   </head>
 
   <body>
     <header>
       <h1>CSCI Courses</h1>
+      <ul class="tabs">
+        <li><a href="#">Browse</a></li>
+        <li><a href="#">Add Classes</a></li>
+        <li><a href="#">Sample Schedules</a></li>
+      </ul>
       <select>
         <option value="">All Courses</option>
         <option value="minor">CSCI Minor</option>
