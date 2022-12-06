@@ -56,12 +56,15 @@ function draw() {
             this.nodes().forEach(function (node) {
                 const dependencies = node.data().dependencies;
                 console.log(dependencies + 2, Math.log2(dependencies + 2) * 100)
-                let size = Math.log2(dependencies + 2) * 75 + 20; // + dependencies * 30;
+                let size = Math.log2(dependencies + 2) * 12 + 10; // + dependencies * 30;
                 node.css("width", size);
                 node.css("height", size);
             });
-            this.layout({ name: 'cose-bilkent', animationDuration: 500 }).run();
+            // this.layout({ name: 'cose-bilkent', animationDuration: 500 }).run();
             // this.layout({name: 'breadthfirst', animationDuration: 1000}).run();
+        },
+        layout: {
+            name: 'preset'
         },
 
         //https://js.cytoscape.org/#cy.style
@@ -91,7 +94,7 @@ function draw() {
                     'text-valign': function (element) {
                         const data = element.data();
                         if (data.id === 'CSCI 18X' || data.id === 'STAT' || data.id === 'EXTERNAL' || data.id === 'PHYS') {
-                            return 'top'
+                            return 'bottom'
                         }
                         return 'center'
                     },
@@ -105,9 +108,9 @@ function draw() {
                     'font-size': function (element) {
                         const data = element.data();
                         if (data.id === 'CSCI 18X' || data.id === 'EXTERNAL') {
-                            return '30px'
+                            return '8px'
                         }
-                        return '16px'
+                        return '6px'
                     },
                     'font-weight': 'bold',
                     'color': function (element) {
@@ -124,10 +127,10 @@ function draw() {
             {
                 selector: 'edge',
                 style: {
-                    'width': 6,
+                    'width': 2,
                     'target-arrow-shape': 'triangle',
-                    'line-color': '#888',
-                    'target-arrow-color': '#888',
+                    // 'line-color': '#888',
+                    // 'target-arrow-color': '#888',
                     'curve-style': 'bezier'
                 }
             }
