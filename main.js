@@ -154,14 +154,17 @@ function draw() {
         cy.edges().forEach(function (edge) {
             console.log(edge);
             edge.css('line-color', '#EEE');
+            edge.css('source-arrow-color', '#DDD');
         });
         cy.nodes().forEach(function (edge) {
             console.log(edge);
             edge.css('background-color', '#EEE');
+            edge.css('color', '#444');
         });
         console.log(`#${evt.target.id()}`);
         evt.target.style({
-            'background-color': 'red'
+            'background-color': '#6a8e7f',
+            'color': 'white'
         });
         var edges = cy.collection();
         var dfs = cy.elements().dfs({
@@ -171,10 +174,12 @@ function draw() {
                 if (e) {
                     edges = edges.add(e);
                     e.style({
-                        'line-color': 'red'
+                        'line-color': '#6a8e7f',
+                        'source-arrow-color': '#6a8e7f'
                     })
                     v.style({
-                        'background-color': 'red'
+                        'background-color': '#6a8e7f',
+                        'color': 'white'
                     })
                 }
             },
