@@ -20,7 +20,7 @@ header {
 
 main {
     display: grid;
-    grid-template-columns: 70vw auto;
+    grid-template-columns: 80vw auto;
     min-height: 90vh;
 }
 

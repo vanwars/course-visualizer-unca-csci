@@ -3,7 +3,7 @@ const colors = {
     'info': '#6a8e7f',
     'systems': '#413C58',
     'minor': '#EFCB68',
-    '': '#CCC'
+    '': '#EEE'
 }
 
 const textColors = {
@@ -56,26 +56,24 @@ function draw() {
             this.nodes().forEach(function (node) {
                 const dependencies = node.data().dependencies;
                 console.log(dependencies + 2, Math.log2(dependencies + 2) * 100)
-                let size = Math.log2(dependencies + 2) * 12 + 10; // + dependencies * 30;
+                //let size = Math.log2(dependencies + 2) * 12 + 10; // + dependencies * 30;
+                let size = 35;
                 node.css("width", size);
                 node.css("height", size);
             });
-            // this.layout({ name: 'cose-bilkent', animationDuration: 500 }).run();
-            // this.layout({name: 'breadthfirst', animationDuration: 1000}).run();
         },
         layout: {
             name: 'preset'
         },
 
-        //https://js.cytoscape.org/#cy.style
         style: [
             {
                 selector: 'node',
                 style: {
                     'background-color': function (element) {
                         const data = element.data();
-                        if (data.hasTaken || data.id === 'CSCI 18X' || data.id === 'STAT' || data.id === 'PHYS') {
-                            return "#F0F0F0";
+                        if (data.hasTaken || data.id === 'CSCI18X' || data.id === 'STAT' || data.id === 'PHYS') {
+                            return "#FFF";
                         } else if (data.id === 'EXTERNAL') {
                             return '#EEE';
                         } else {
@@ -84,8 +82,8 @@ function draw() {
                     },
                     'label': function (element) {
                         const data = element.data();
-                        if (data.id === 'CSCI 18X' || data.id === 'STAT' || data.id === 'PHYS') {
-                            return "Pick One"
+                        if (data.id === 'CSCI18X' || data.id === 'STAT' || data.id === 'PHYS') {
+                            return ""; //"Pick One"
                         } else if (data.id === 'EXTERNAL') {
                             return "Math & Science Requirements"
                         }
@@ -93,21 +91,21 @@ function draw() {
                     },
                     'text-valign': function (element) {
                         const data = element.data();
-                        if (data.id === 'CSCI 18X' || data.id === 'STAT' || data.id === 'EXTERNAL' || data.id === 'PHYS') {
+                        if (data.id === 'CSCI18X' || data.id === 'STAT' || data.id === 'EXTERNAL' || data.id === 'PHYS') {
                             return 'bottom'
                         }
                         return 'center'
                     },
                     'text-halign': function (element) {
                         const data = element.data();
-                        if (data.id === 'CSCI 18X') {
+                        if (data.id === 'CSCI18X') {
                             return 'center'
                         }
                         return 'center'
                     },
                     'font-size': function (element) {
                         const data = element.data();
-                        if (data.id === 'CSCI 18X' || data.id === 'EXTERNAL') {
+                        if (data.id === 'CSCI18X' || data.id === 'EXTERNAL') {
                             return '8px'
                         }
                         return '6px'
@@ -115,7 +113,7 @@ function draw() {
                     'font-weight': 'bold',
                     'color': function (element) {
                         const data = element.data();
-                        if (data.hasTaken || data.id === 'CSCI 18X' || data.id === 'EXTERNAL' || data.id == 'STAT' || data.id === 'PHYS') {
+                        if (data.hasTaken || data.id === 'CSCI18X' || data.id === 'EXTERNAL' || data.id == 'STAT' || data.id === 'PHYS') {
                             return "#444";
                         } else {
                             return textColors[key]
@@ -127,10 +125,10 @@ function draw() {
             {
                 selector: 'edge',
                 style: {
-                    'width': 2,
-                    'target-arrow-shape': 'triangle',
-                    // 'line-color': '#888',
-                    // 'target-arrow-color': '#888',
+                    'width': 1,
+                    'source-arrow-shape': 'triangle',
+                    'line-color': '#DDD',
+                    'source-arrow-color': '#DDD',
                     'curve-style': 'bezier'
                 }
             }
@@ -150,10 +148,45 @@ function draw() {
             ${data.info ? '<span class="info">Information Systems </span>' : ''}
             ${data.minor ? '<span class="minor">CS Minor</span>' : ''}
         `
-        //alert(e.target.data().title);
     });
 
+    cy.bind('click', 'node', function(evt) {
+        cy.edges().forEach(function (edge) {
+            console.log(edge);
+            edge.css('line-color', '#EEE');
+        });
+        cy.nodes().forEach(function (edge) {
+            console.log(edge);
+            edge.css('background-color', '#EEE');
+        });
+        console.log(`#${evt.target.id()}`);
+        evt.target.style({
+            'background-color': 'red'
+        });
+        var edges = cy.collection();
+        var dfs = cy.elements().dfs({
+            roots: `#${evt.target.id()}`,
+            visit: function(v, e, u, i, depth) {
+                // console.log('visit ' + v.id());
+                if (e) {
+                    edges = edges.add(e);
+                    e.style({
+                        'line-color': 'red'
+                    })
+                    v.style({
+                        'background-color': 'red'
+                    })
+                }
+            },
+            directed: true
+        });
+      
+        // console.log(dfs);
+        var path = dfs.path;
+        path.select();
+    });
 }
+
 
 document.querySelector('select').addEventListener('change', function () {
     draw();
