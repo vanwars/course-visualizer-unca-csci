@@ -13,12 +13,8 @@ const textColors = {
     '': '#444'
 }
 
-    
-function highlightPath (evt) {
-    // const selectionColor = '#e4ff1a';
-    const selectionColor = '#3c91e6';
+function resetStyles () {
     const key = document.querySelector('select').value;
-    const node = evt.target;
     cy.edges().forEach(function (edge) {
         edge.style({
             'line-color': '#EEE',
@@ -47,8 +43,17 @@ function highlightPath (evt) {
             });
         }
     });
+}
+
+function highlightPath (evt) {
+    // const selectionColor = '#e4ff1a';
+    const selectionColor = '#3c91e6';
+    const node = evt.target;
+    resetStyles();
     node.style({
         'border-color': selectionColor,
+        'background-color': selectionColor,
+        'color': 'white',
         'border-width': 3,
     });
     var nodes = [];
@@ -77,15 +82,20 @@ function highlightPath (evt) {
     const data = node.data();
     data.prerequisites = `<ul><li>${nodes.join("</li><li>")}</li></ul>`;
     document.querySelector('.course-info').innerHTML = `
-        <h2>${data.id.replace("CSCI", "CSCI ")}: ${data.title}</h2>
-        <p>${data.description ? data.description : 'Some description of the course...'}</p>
-        ${data.systems || data.info || data.minor ? '<h3>Required For</h3>' : ''}
-        ${data.systems ? '<span class="systems">Computer Systems</span>' : ''}
-        ${data.info ? '<span class="info">Information Systems </span>' : ''}
-        ${data.minor ? '<span class="minor">CS Minor</span>' : ''}
-        <h3>Prerequisites</h3>
-        <p>${data.prerequisites}</p>
+        <div class="course-details">
+            <h2>${data.id.replace("CSCI", "CSCI ")}: ${data.title}</h2>
+            <p>${data.description ? data.description : 'Some description of the course...'}</p>
+            ${data.systems || data.info || data.minor ? '<h3>Required For</h3>' : ''}
+            ${data.systems ? '<span class="systems">Computer Systems</span>' : ''}
+            ${data.info ? '<span class="info">Information Systems </span>' : ''}
+            ${data.minor ? '<span class="minor">CS Minor</span>' : ''}
+            <h3>Prerequisites</h3>
+            <p>${data.prerequisites}</p>
+        </div>
     `;
+    setTimeout(function () {
+        document.querySelector('.course-details').classList.add('visible');
+    }, 100);
 }
 
 // function setNodeBackground (element) {
@@ -175,8 +185,9 @@ function draw() {
                     'background-color': "#F0F0F0",
                     'border-width': 0.5,
                     "background-opacity": 0.1,
-                    'text-valign': 'top',
+                    'text-valign': 'bottom',
                     'font-size': '10px',
+                    'color': '#555',
                     'font-weight': 'bold',
                     'label': function(el) {
                         return el.data().title;
