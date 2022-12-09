@@ -12,9 +12,12 @@ const textColors = {
     'minor': '#444',
     '': '#444'
 }
-const key = document.querySelector('select').value;
+
     
 function highlightPath (evt) {
+    // const selectionColor = '#e4ff1a';
+    const selectionColor = '#3c91e6';
+    const key = document.querySelector('select').value;
     const node = evt.target;
     cy.edges().forEach(function (edge) {
         edge.style({
@@ -23,14 +26,30 @@ function highlightPath (evt) {
         });
     });
     cy.nodes().forEach(function (node) {
-        node.style({
-            'background-color': setNodeBackground,
-            'color': setNodeTextColor
-        });
+        if (node.isParent()) {
+            node.style({
+                'background-color': "#F0F0F0",
+                'border-color': "#F0F0F0",
+                "border-width": 0.5,
+                "background-opacity": 0.1,
+                'border-width': .5,
+            })
+        }
+        else {
+            node.style({
+                'background-color': function (element) {
+                    return colors[key];
+                },
+                'color': function (element) {
+                    return textColors[key]
+                },
+                'border-width': 0,
+            });
+        }
     });
     node.style({
-        'background-color': '#6a8e7f',
-        'color': 'white'
+        'border-color': selectionColor,
+        'border-width': 3,
     });
     var nodes = [];
     cy.elements().dfs({
@@ -40,17 +59,21 @@ function highlightPath (evt) {
                 var courseID = node.data().id.replace("CSCI", "CSCI ");
                 nodes.push(courseID);
                 edge.style({
-                    'line-color': '#6a8e7f',
-                    'source-arrow-color': '#6a8e7f'
+                    'line-color': selectionColor,
+                    'source-arrow-color': selectionColor,
+                    'width': 3,
                 })
                 node.style({
-                    'background-color': '#6a8e7f',
-                    'color': 'white'
+                    'border-color': selectionColor,
+                    'border-width': 3
+                    // 'color': 'black',
+                    // "background-opacity": 1,
                 })
             }
         },
         directed: true
     });
+    
     const data = node.data();
     data.prerequisites = `<ul><li>${nodes.join("</li><li>")}</li></ul>`;
     document.querySelector('.course-info').innerHTML = `
@@ -65,26 +88,17 @@ function highlightPath (evt) {
     `;
 }
 
-function setNodeBackground (element) {
-    const data = element.data();
-    if (['CSCI18X', 'STAT', 'PHYS', 'EXTERNAL'].includes(data.id)) {
-        return "#FFF";
-    } else {
-        return colors[key]
-    }
-}
+// function setNodeBackground (element) {
+//     return colors[key]
+// }
 
-function setNodeTextColor (element) {
-    const data = element.data();
-    if (data.hasTaken || ['CSCI18X', 'STAT', 'EXTERNAL', 'PHYS'].includes(data.id)) {
-        return "#444";
-    } else {
-        return textColors[key]
-    }
-}
+// function setNodeTextColor (element) {
+//     return textColors[key]
+// }
 
 
 function getCoursesForSpecialization(elements, key) {
+    console.log(elements, key);
     if (!key) {
         return elements;
     }
@@ -117,7 +131,7 @@ function getCoursesForSpecialization(elements, key) {
 }
 
 function draw() {
-    // const key = document.querySelector('select').value;
+    const key = document.querySelector('select').value;
     document.querySelector('#cy').innerHTML = "";
     var cy = window.cy = cytoscape({
         container: document.getElementById('cy'),
@@ -138,38 +152,37 @@ function draw() {
 
         style: [
             {
-                selector: 'node',
+                selector: ':childless',
                 style: {
-                    'background-color': setNodeBackground,
-                    'color': setNodeTextColor,
+                    'background-color': function (element) {
+                        return colors[key];
+                    },
+                    'color': function (element) {
+                        return textColors[key]
+                    },
                     'font-weight': 'bold',
                     'text-halign': 'center',
                     'label': function (element) {
-                        const data = element.data();
-                        if (['CSCI18X', 'STAT', 'PHYS'].includes(data.id)) {
-                            return "Pick One";
-                        } else if (data.id === 'EXTERNAL') {
-                            return "Math & Science Requirements"
-                        }
                         return element.data().id; //.split(" ")[1];
                     },
-                    'text-valign': function (element) {
-                        const data = element.data();
-                        if (['CSCI18X', 'STAT', 'EXTERNAL', 'PHYS'].includes(data.id)) {
-                            return 'top'
-                        }
-                        return 'center'
-                    },
-                    'font-size': function (element) {
-                        const data = element.data();
-                        if (['CSCI18X', 'EXTERNAL'].includes(data.id)) {
-                            return '8px'
-                        }
-                        return '6px'
-                    },
+                    'text-valign': 'center',
+                    'font-size': '6px'
                 }
             },
-
+            {
+                selector: ':parent',
+                style: {
+                    'background-color': "#F0F0F0",
+                    'border-width': 0.5,
+                    "background-opacity": 0.1,
+                    'text-valign': 'top',
+                    'font-size': '10px',
+                    'font-weight': 'bold',
+                    'label': function(el) {
+                        return el.data().title;
+                    }
+                }
+            },
             {
                 selector: 'edge',
                 style: {

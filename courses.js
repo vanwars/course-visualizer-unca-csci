@@ -13,7 +13,7 @@ export default {
             position: { x: 170, y: 435 }
         },
         { 
-            data: { id: 'CSCI18X', title: 'Introductory Programming (Either 182 or 183 or 185)', dependencies: 3, minor: true, info: true, systems: true }
+            data: { id: 'CSCI18X', title: 'Pick One', dependencies: 3, minor: true, info: true, systems: true }
         },
         { 
             data: { id: 'CSCI201', title: 'Intro to OOP', dependencies: 2, minor: true, info: true, systems: true, description: "An introduction to problem solving, algorithm design, implementation, and testing using object-oriented programming principles. Emphasis is placed on event-driven programming methods, including creating and manipulating objects, classes, and using object-oriented tools such as the class debugger. Pre- or corequisite: CSCI 182, 183 or 185. Fall and Spring." },
@@ -126,10 +126,10 @@ export default {
             position: { x: 50, y: 500 }
         },
         { 
-            data: { id: 'STAT', parent: 'EXTERNAL', title: 'Statistics Requirement', dependencies: 0, info: true, systems: true },
+            data: { id: 'STAT', parent: 'EXTERNAL', title: 'Statistics (Pick One)', dependencies: 0, info: true, systems: true },
         },
         { 
-            data: { id: 'PHYS', parent: 'EXTERNAL', title: 'Physics Requirements', dependencies: 0, systems: true },
+            data: { id: 'PHYS', parent: 'EXTERNAL', title: 'Pick One', dependencies: 0, systems: true },
         },
         { 
             data: { id: 'EXTERNAL', title: 'Math & Physics Requirements', dependencies: 0, systems: true, info: true },
