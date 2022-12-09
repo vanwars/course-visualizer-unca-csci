@@ -95,46 +95,46 @@ export default {
             data: { id: 'CSCI344', title: 'Advanced Web Technologies', dependencies: 0, info: true, description: "A class in the development of clients and servers for web applications. Topics include database integration, web site management, and the development of applications with scripting languages such as JavaScript. Prerequisite: one course from CSCI 182, 183, 185 or 201. Spring." }, 
             position: { x: 270, y: 450 }
         },
-        // { 
-        //     data: { id: 'MATH 191', parent: 'EXTERNAL', title: 'Calculus I', dependencies: 0, info: true, systems: true },
-        //     position: { x: 100, y: 0 }
-        // },
-        // { 
-        //     data: { id: 'MATH 251', parent: 'EXTERNAL', title: 'Discrete Mathematics', dependencies: 0, info: true, systems: true },
-        //     position: { x: 100, y: 0 }
-        // },
-        // { 
-        //     data: { id: 'STAT 185', parent: 'STAT', title: 'Introductory Statistics', dependencies: 0, info: true, systems: true },
-        //     position: { x: 100, y: 0 }
-        // },
-        // { 
-        //     data: { id: 'STAT 225', parent: 'STAT', title: 'Introduction to Calculus-Based Statistics', dependencies: 0, info: true, systems: true },
-        //     position: { x: 100, y: 0 }
-        // },
-        // { 
-        //     data: { id: 'PHYS 221', parent: 'EXTERNAL', title: 'Physics I', dependencies: 2, systems: true },
-        //     position: { x: 100, y: 0 }
-        // },
-        // { 
-        //     data: { id: 'PHYS 222', parent: 'PHYS', title: 'Physics II', dependencies: 0, systems: true },
-        //     position: { x: 100, y: 0 }
-        // },
-        // { 
-        //     data: { id: 'PHYS 231', parent: 'PHYS', title: 'Introductory Physics II', dependencies: 0, systems: true },
-        //     position: { x: 100, y: 0 }
-        // },
-        // { 
-        //     data: { id: 'STAT', parent: 'EXTERNAL', title: 'Statistics Requirement', dependencies: 0, info: true, systems: true },
-        //     position: { x: 100, y: 0 }
-        // },
-        // { 
-        //     data: { id: 'PHYS', parent: 'EXTERNAL', title: 'Physics Requirements', dependencies: 0, systems: true },
-        //     position: { x: 100, y: 0 }
-        // },
-        // { 
-        //     data: { id: 'EXTERNAL', title: 'Math & Physics Requirements', dependencies: 0, systems: true, info: true },
-        //     position: { x: 100, y: 0 }
-        // },
+
+
+        { 
+            data: { id: 'MATH 191', parent: 'EXTERNAL', title: 'Calculus I', dependencies: 0, info: true, systems: true },
+            position: { x: -75, y: 565 }
+        },
+        { 
+            data: { id: 'MATH 251', parent: 'EXTERNAL', title: 'Discrete Mathematics', dependencies: 0, info: true, systems: true },
+            position: { x: -75, y: 500 }
+        },
+        { 
+            data: { id: 'STAT 185', parent: 'STAT', title: 'Introductory Statistics', dependencies: 0, info: true, systems: true },
+            position: { x: -150, y: 500 }
+        },
+        { 
+            data: { id: 'STAT 225', parent: 'STAT', title: 'Introduction to Calculus-Based Statistics', dependencies: 0, info: true, systems: true },
+            position: { x: -200, y: 500 }
+        },
+        { 
+            data: { id: 'PHYS 221', parent: 'EXTERNAL', title: 'Physics I', dependencies: 2, systems: true },
+            position: { x: 25, y: 565 }
+        },
+        { 
+            data: { id: 'PHYS 222', parent: 'PHYS', title: 'Physics II', dependencies: 0, systems: true },
+            position: { x: 0, y: 500 }
+        },
+        { 
+            data: { id: 'PHYS 231', parent: 'PHYS', title: 'Introductory Physics II', dependencies: 0, systems: true },
+            position: { x: 50, y: 500 }
+        },
+        { 
+            data: { id: 'STAT', parent: 'EXTERNAL', title: 'Statistics Requirement', dependencies: 0, info: true, systems: true },
+        },
+        { 
+            data: { id: 'PHYS', parent: 'EXTERNAL', title: 'Physics Requirements', dependencies: 0, systems: true },
+        },
+        { 
+            data: { id: 'EXTERNAL', title: 'Math & Physics Requirements', dependencies: 0, systems: true, info: true },
+            position: { x: 400, y: 350 }
+        },
     ],
     edges: [
         // { data: { source: 'CSCI235', target: 'CSCI18X' } },
@@ -162,8 +162,8 @@ export default {
         { data: { source: 'CSCI431', target: 'CSCI434' } },
         { data: { source: 'CSCI480', target: 'CSCI338' } },
         { data: { source: 'CSCI481', target: 'CSCI480' } },
-        // { data: { source: 'MATH 251', target: 'MATH 191' } },
-        // { data: { source: 'PHYS 222', target: 'PHYS 221' } },
-        // { data: { source: 'PHYS 231', target: 'PHYS 221' } }
+        { data: { source: 'MATH 251', target: 'MATH 191' } },
+        { data: { source: 'PHYS 222', target: 'PHYS 221' } },
+        { data: { source: 'PHYS 231', target: 'PHYS 221' } }
     ]
 };

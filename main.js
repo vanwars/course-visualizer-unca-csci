@@ -49,9 +49,9 @@ function highlightPath (evt) {
     const data = node.data();
     data.prerequisites = `<ul><li>${nodes.join("</li><li>")}</li></ul>`;
     document.querySelector('.course-info').innerHTML = `
-        <h3>${data.id.replace("CSCI", "CSCI ")}: ${data.title}</h3>
+        <h2>${data.id.replace("CSCI", "CSCI ")}: ${data.title}</h2>
         <p>${data.description ? data.description : 'Some description of the course...'}</p>
-        ${data.systems || data.info || data.minor ? '<h4>Required For:</h4>' : ''}
+        ${data.systems || data.info || data.minor ? '<h3>Required For</h3>' : ''}
         ${data.systems ? '<span class="systems">Computer Systems</span>' : ''}
         ${data.info ? '<span class="info">Information Systems </span>' : ''}
         ${data.minor ? '<span class="minor">CS Minor</span>' : ''}
@@ -59,12 +59,6 @@ function highlightPath (evt) {
         <p>${data.prerequisites}</p>
     `;
 }
-
-// function showCourseInfo (evt) {
-//     const data = evt.target.data();
-
-    
-// }
 
 
 function getCoursesForSpecialization(elements, key) {
@@ -125,18 +119,16 @@ function draw() {
                 style: {
                     'background-color': function (element) {
                         const data = element.data();
-                        if (data.hasTaken || data.id === 'CSCI18X' || data.id === 'STAT' || data.id === 'PHYS') {
+                        if (['CSCI18X', 'STAT', 'PHYS', 'EXTERNAL'].includes(data.id)) {
                             return "#FFF";
-                        } else if (data.id === 'EXTERNAL') {
-                            return '#EEE';
                         } else {
                             return colors[key]
                         }
                     },
                     'label': function (element) {
                         const data = element.data();
-                        if (data.id === 'CSCI18X' || data.id === 'STAT' || data.id === 'PHYS') {
-                            return ""; //"Pick One"
+                        if (['CSCI18X', 'STAT', 'PHYS'].includes(data.id)) {
+                            return "Pick One";
                         } else if (data.id === 'EXTERNAL') {
                             return "Math & Science Requirements"
                         }
@@ -144,8 +136,8 @@ function draw() {
                     },
                     'text-valign': function (element) {
                         const data = element.data();
-                        if (data.id === 'CSCI18X' || data.id === 'STAT' || data.id === 'EXTERNAL' || data.id === 'PHYS') {
-                            return 'bottom'
+                        if (['CSCI18X', 'STAT', 'EXTERNAL', 'PHYS'].includes(data.id)) {
+                            return 'top'
                         }
                         return 'center'
                     },
@@ -158,7 +150,7 @@ function draw() {
                     },
                     'font-size': function (element) {
                         const data = element.data();
-                        if (data.id === 'CSCI18X' || data.id === 'EXTERNAL') {
+                        if (['CSCI18X', 'EXTERNAL'].includes(data.id)) {
                             return '8px'
                         }
                         return '6px'
@@ -166,7 +158,7 @@ function draw() {
                     'font-weight': 'bold',
                     'color': function (element) {
                         const data = element.data();
-                        if (data.hasTaken || data.id === 'CSCI18X' || data.id === 'EXTERNAL' || data.id == 'STAT' || data.id === 'PHYS') {
+                        if (data.hasTaken || ['CSCI18X', 'STAT', 'EXTERNAL', 'PHYS'].includes(data.id)) {
                             return "#444";
                         } else {
                             return textColors[key]
