@@ -12,16 +12,21 @@ const textColors = {
     'minor': '#444',
     '': '#444'
 }
-
+const key = document.querySelector('select').value;
+    
 function highlightPath (evt) {
     const node = evt.target;
     cy.edges().forEach(function (edge) {
-        edge.css('line-color', '#EEE');
-        edge.css('source-arrow-color', '#DDD');
+        edge.style({
+            'line-color': '#EEE',
+            'source-arrow-color': '#DDD'
+        });
     });
-    cy.nodes().forEach(function (edge) {
-        edge.css('background-color', '#EEE');
-        edge.css('color', '#444');
+    cy.nodes().forEach(function (node) {
+        node.style({
+            'background-color': setNodeBackground,
+            'color': setNodeTextColor
+        });
     });
     node.style({
         'background-color': '#6a8e7f',
@@ -60,6 +65,24 @@ function highlightPath (evt) {
     `;
 }
 
+function setNodeBackground (element) {
+    const data = element.data();
+    if (['CSCI18X', 'STAT', 'PHYS', 'EXTERNAL'].includes(data.id)) {
+        return "#FFF";
+    } else {
+        return colors[key]
+    }
+}
+
+function setNodeTextColor (element) {
+    const data = element.data();
+    if (data.hasTaken || ['CSCI18X', 'STAT', 'EXTERNAL', 'PHYS'].includes(data.id)) {
+        return "#444";
+    } else {
+        return textColors[key]
+    }
+}
+
 
 function getCoursesForSpecialization(elements, key) {
     if (!key) {
@@ -94,7 +117,7 @@ function getCoursesForSpecialization(elements, key) {
 }
 
 function draw() {
-    const key = document.querySelector('select').value;
+    // const key = document.querySelector('select').value;
     document.querySelector('#cy').innerHTML = "";
     var cy = window.cy = cytoscape({
         container: document.getElementById('cy'),
@@ -117,14 +140,10 @@ function draw() {
             {
                 selector: 'node',
                 style: {
-                    'background-color': function (element) {
-                        const data = element.data();
-                        if (['CSCI18X', 'STAT', 'PHYS', 'EXTERNAL'].includes(data.id)) {
-                            return "#FFF";
-                        } else {
-                            return colors[key]
-                        }
-                    },
+                    'background-color': setNodeBackground,
+                    'color': setNodeTextColor,
+                    'font-weight': 'bold',
+                    'text-halign': 'center',
                     'label': function (element) {
                         const data = element.data();
                         if (['CSCI18X', 'STAT', 'PHYS'].includes(data.id)) {
@@ -141,13 +160,6 @@ function draw() {
                         }
                         return 'center'
                     },
-                    'text-halign': function (element) {
-                        const data = element.data();
-                        if (data.id === 'CSCI18X') {
-                            return 'center'
-                        }
-                        return 'center'
-                    },
                     'font-size': function (element) {
                         const data = element.data();
                         if (['CSCI18X', 'EXTERNAL'].includes(data.id)) {
@@ -155,15 +167,6 @@ function draw() {
                         }
                         return '6px'
                     },
-                    'font-weight': 'bold',
-                    'color': function (element) {
-                        const data = element.data();
-                        if (data.hasTaken || ['CSCI18X', 'STAT', 'EXTERNAL', 'PHYS'].includes(data.id)) {
-                            return "#444";
-                        } else {
-                            return textColors[key]
-                        }
-                    }
                 }
             },
 
