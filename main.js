@@ -2,25 +2,14 @@
 // import elements from "./courses.js";
 import DataManager from "./data-manager.js";
 
+let nodeSize = 40;
+let nodeSizeSelected = 45;
+let selectedColor = '#3c91e6';
 
 class CourseVisualizer {
     
     constructor () {
         this.cy;
-        this.key = document.querySelector('select').value;
-        this.colors = {
-            'info': '#6a8e7f',
-            'systems': '#413C58',
-            'minor': '#EFCB68',
-            '': '#EEE'
-        };
-        
-        this.textColors = {
-            'info': 'white',
-            'systems': 'white',
-            'minor': '#444',
-            '': '#444'
-        }
         this.attachEventHandlers();
     }
 
@@ -34,42 +23,24 @@ class CourseVisualizer {
         const graphData = await this.dataManager.fetchDataFromSheets();
         // console.log(graphData);
         const d1 = this.getCoursesForSpecialization(graphData);
-        // console.log(JSON.stringify(d.edges, null, "  "));
-        // console.log(JSON.stringify(d1.edges, null, "  "));
-        // console.log(JSON.stringify(d.nodes, null, "  "));
-        // console.log(JSON.stringify(d1.nodes, null, "  "));
-        // d1.nodes = d.nodes;
-        this.key = document.querySelector('select').value;
         document.querySelector('#cy').innerHTML = "";
         this.cy = window.cy = cytoscape({
             container: document.getElementById('cy'),
-    
-            ready: function () {
-                this.nodes().forEach(function (node) {
-                    // const dependencies = node.data().dependencies;
-                    // console.log(dependencies + 2, Math.log2(dependencies + 2) * 100)
-                    //let size = Math.log2(dependencies + 2) * 12 + 10; // + dependencies * 30;
-                    let size = 40;
-                    node.style("width", size);
-                    node.style("height", size);
-                });
-            },
             layout: {
                 name: 'preset'
             },
-    
             style: this.getStyles(),
             elements: d1
         });
     
-        cy.bind('click', 'node', this.highlightPath.bind(this));
+        cy.bind('click', 'node', this.highlightDependencyPath.bind(this));
     }
 
     getStyles() {
         return [
             {
                 selector: ':parent',
-                css: {
+                style: {
                     'background-color': "#F0F0F0",
                     'border-width': 0.5,
                     "background-opacity": 0.1,
@@ -85,43 +56,78 @@ class CourseVisualizer {
             },
             {
                 selector: ':childless',
-                css: {
-                    'background-color': element => {
-                        return this.colors[this.key];
-                    },
-                    'color': element => {
-                        return this.textColors[this.key]
-                    },
+                style: {
+                    'background-color': '#EEE',
+                    'border-color': '#F0F0F0',
+                    'color': '#444',
                     'font-weight': 'bold',
                     'text-halign': 'center',
                     'label': element => {
-                        return element.data().id; //.split(" ")[1];
+                        return element.data().id;
                     },
+                    'width': nodeSize,
+                    'height': nodeSize,
                     'text-valign': 'center',
-                    'font-size': '7px'
+                    'font-size': '7px',
+                    'transition-property': 'border-width, border-color, width, height, border-opacity, background-color',
+                    'transition-duration' : '0.5s',
+                    'transition-timing-function': 'ease-in'
                 }
             },
             {
                 selector: 'edge',
-                css: {
+                style: {
                     'width': 1,
                     'source-arrow-shape': 'triangle',
                     'line-color': '#DDD',
                     'source-arrow-color': '#DDD',
-                    'curve-style': 'bezier'
+                    'curve-style': 'bezier',
+                    'transition-property': 'width, line-color',
+                    'transition-duration' : '0.5s',
+                    'transition-timing-function': 'ease-in'
                 }
             },
             {
-                selector: '.highlighted',
-                css: {
-                  'background-color': 'red'
+                selector: 'node.highlighted',
+                style: {
+                    'border-color': selectedColor,
+                    'background-color': selectedColor,
+                    'color': 'white',
+                    'border-width': 3,
+                    'width': nodeSizeSelected,
+                    'height': nodeSizeSelected,
+                    'transition-property': 'border-width, border-color, width, height, border-opacity, background-color',
+                    'transition-duration' : '0.5s',
+                    'transition-timing-function': 'ease-in'
+                }
+            },
+            {
+                selector: 'edge.selected',
+                style: {
+                    'line-color': selectedColor,
+                    'source-arrow-color': selectedColor,
+                    'width': 3,
+                    'transition-property': 'width, line-color',
+                    'transition-duration' : '0.5s',
+                    'transition-timing-function': 'ease-in'
+                }
+            },
+            {
+                selector: 'node.selected',
+                style: {
+                    'border-color': selectedColor,
+                    'border-width': 3,
+                    'width': nodeSizeSelected,
+                    'height': nodeSizeSelected,
+                    'transition-property': 'border-width, border-color, width, height, border-opacity, background-color',
+                    'transition-duration' : '0.5s',
+                    'transition-timing-function': 'ease-in'
                 }
             }
         ];
     }
 
     resetStyles () {
-        this.key = document.querySelector('select').value;
         cy.edges().forEach(function (edge) {
             edge.style({
                 'line-color': '#EEE',
@@ -130,29 +136,6 @@ class CourseVisualizer {
             });
         });
         cy.nodes().forEach(this.resetNodeStyle.bind(this));
-    }
-
-    resetNodeStyle (node) {
-        if (node.isParent()) {
-            node.style({
-                'background-color': "#F0F0F0",
-                'border-color': "#F0F0F0",
-                "border-width": 0.5,
-                "background-opacity": 0.1,
-                'border-width': .5,
-            })
-        }
-        else {
-            node.style({
-                'background-color': element => {
-                    return this.colors[this.key];
-                },
-                'color': element => {
-                    return this.textColors[this.key]
-                },
-                'border-width': 0,
-            });
-        }
     }
 
     getCoursesForSpecialization(elements) {
@@ -207,43 +190,7 @@ class CourseVisualizer {
         }
     }
 
-    highlightPath (evt) {
-        // const selectionColor = '#e4ff1a';
-        const selectionColor = '#3c91e6';
-        const node = evt.target;
-        this.resetStyles();
-        node.style({
-            'border-color': selectionColor,
-            'background-color': selectionColor,
-            'color': 'white',
-            'border-width': 3,
-        });
-        var nodes = {};
-        cy.elements().dfs({
-            roots: `#${evt.target.id()}`,
-            visit: function(node, edge, u, i, depth) {
-                if (edge) {
-                    var courseID = node.data().id.replace("CSCI", "CSCI ");
-                    if (!nodes[depth]) {
-                        nodes[depth] = [];
-                    }
-                    nodes[depth].push(courseID);
-                    //nodes.push(courseID + "(" + depth + ")");
-                    edge.style({
-                        'line-color': selectionColor,
-                        'source-arrow-color': selectionColor,
-                        'width': 3,
-                    })
-                    node.style({
-                        'border-color': selectionColor,
-                        'border-width': 3
-                    })
-                }
-            },
-            directed: true
-        });
-        
-        const data = node.data();
+    displayCourseInfo (data, dependencies) {
         document.querySelector('.course-info').innerHTML = `
             <div class="course-details">
                 <h2>${data.id.replace("CSCI", "CSCI ")}: ${data.title}</h2>
@@ -253,12 +200,38 @@ class CourseVisualizer {
                 ${data.info ? '<span class="info">Information Systems </span>' : ''}
                 ${data.minor ? '<span class="minor">CS Minor</span>' : ''}
                 <h3>Prerequisites</h3>
-                <p>${this.prereqsToHTML(nodes)}</p>
+                <p>${this.prereqsToHTML(dependencies)}</p>
             </div>
         `;
         setTimeout(function () {
             document.querySelector('.course-details').classList.add('visible');
         }, 100);
+    }
+
+    highlightDependencyPath (evt) {
+        const node = evt.target;
+        cy.elements().removeClass("highlighted");
+        cy.elements().removeClass("selected");
+        node.addClass("highlighted");
+
+        var dependencies = {};
+        cy.elements().dfs({
+            roots: `#${evt.target.id()}`,
+            visit: function(node, edge, u, i, depth) {
+                if (edge) {
+                    var courseID = node.data().id.replace("CSCI", "CSCI ");
+                    if (!dependencies[depth]) {
+                        dependencies[depth] = [];
+                    }
+                    dependencies[depth].push(courseID);
+                    edge.addClass('selected');
+                    node.addClass('selected');
+                }
+            },
+            directed: true
+        });
+
+        this.displayCourseInfo(node.data(), dependencies);
     }
 }
 
