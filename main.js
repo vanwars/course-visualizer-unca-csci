@@ -1,4 +1,4 @@
-import graphStyles from "./graph-styles.js";
+import {graphProperties, graphStyles} from "./graph-styles.js";
 import DataManager from "./data-manager.js";
 
 class CourseVisualizer {
@@ -6,6 +6,7 @@ class CourseVisualizer {
     constructor () {
         this.cy;
         this.attachEventHandlers();
+        this.styleVariables = graphStyles.variables;
     }
 
     attachEventHandlers () {
@@ -31,10 +32,13 @@ class CourseVisualizer {
 
     filterBySpecialization() {
         this.clearStyling();
+        this.clearDetailPanel();
         const key = document.querySelector('select').value;
         cy.nodes().forEach(node => {
             if (node.data()[key]) {
-                node.addClass(key);
+                graphProperties['featured'] = graphProperties[key];
+                console.log(graphProperties['featured']);
+                node.addClass('featured');
             }
         });
     }

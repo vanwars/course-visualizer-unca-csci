@@ -1,10 +1,13 @@
-let nodeSize = 40;
-let nodeSizeSelected = 45;
-let fontSizeSelected = '9px';
-let selectedColor = '#3c91e6';
-let systemsColor = '#413C58';
-let infoColor = '#6a8e7f';
-let minorColor = '#EFCB68';
+const graphProperties = {
+    nodeSize: 40,
+    nodeSizeSelected: 45,
+    fontSizeSelected: '9px',
+    selectedColor: '#3c91e6',
+    systems: '#413C58',
+    info: '#6a8e7f',
+    minor: '#EFCB68',
+    featured: '#EEE'
+}
 
 const graphStyles = [
     {
@@ -34,8 +37,8 @@ const graphStyles = [
             'label': element => {
                 return element.data().id;
             },
-            'width': nodeSize,
-            'height': nodeSize,
+            'width': graphProperties.nodeSize,
+            'height': graphProperties.nodeSize,
             'text-valign': 'center',
             'font-size': '7px',
             'transition-property': 'border-width, border-color, width, height, border-opacity, background-color',
@@ -57,42 +60,18 @@ const graphStyles = [
         }
     },
     {
-        selector: 'node.minor:childless',
+        selector: 'node.featured:childless',
         style: {
-            'border-color': minorColor,
-            'background-color': minorColor,
-            'color': '#444',
-            'font-size': fontSizeSelected,
-            'width': nodeSizeSelected,
-            'height': nodeSizeSelected,
-            'transition-property': 'border-width, border-color, color, width, height, font-size, background-color',
-            'transition-duration' : '0.5s',
-            'transition-timing-function': 'ease-in'
-        }
-    },
-    {
-        selector: 'node.systems:childless',
-        style: {
-            'border-color': systemsColor,
-            'background-color': systemsColor,
-            'color': 'white',
-            'width': nodeSizeSelected,
-            'height': nodeSizeSelected,
-            'font-size': fontSizeSelected,
-            'transition-property': 'border-width, border-color, color, width, height, font-size, background-color',
-            'transition-duration' : '0.5s',
-            'transition-timing-function': 'ease-in'
-        }
-    },
-    {
-        selector: 'node.info:childless',
-        style: {
-            'border-color': infoColor,
-            'background-color': infoColor,
-            'color': 'white',
-            'width': nodeSizeSelected,
-            'height': nodeSizeSelected,
-            'font-size': fontSizeSelected,
+            'border-color': () => {
+                return graphProperties.featured
+            },
+            'background-color': () => {
+                return graphProperties.featured
+            },
+            'color': '#FFF',
+            'font-size': graphProperties.fontSizeSelected,
+            'width': graphProperties.nodeSizeSelected,
+            'height': graphProperties.nodeSizeSelected,
             'transition-property': 'border-width, border-color, color, width, height, font-size, background-color',
             'transition-duration' : '0.5s',
             'transition-timing-function': 'ease-in'
@@ -101,12 +80,12 @@ const graphStyles = [
     {
         selector: 'node.highlighted',
         style: {
-            'border-color': selectedColor,
-            'background-color': selectedColor,
+            'border-color': graphProperties.selectedColor,
+            'background-color': graphProperties.selectedColor,
             'color': 'white',
             'border-width': 3,
-            'width': nodeSizeSelected,
-            'height': nodeSizeSelected,
+            'width': graphProperties.nodeSizeSelected,
+            'height': graphProperties.nodeSizeSelected,
             'transition-property': 'border-width, border-color, color, width, height, border-opacity, background-color',
             'transition-duration' : '0.5s',
             'transition-timing-function': 'ease-in'
@@ -115,8 +94,8 @@ const graphStyles = [
     {
         selector: 'edge.selected',
         style: {
-            'line-color': selectedColor,
-            'source-arrow-color': selectedColor,
+            'line-color': graphProperties.selectedColor,
+            'source-arrow-color': graphProperties.selectedColor,
             'width': 3,
             'transition-property': 'width, line-color',
             'transition-duration' : '0.5s',
@@ -126,10 +105,10 @@ const graphStyles = [
     {
         selector: 'node.selected',
         style: {
-            'border-color': selectedColor,
+            'border-color': graphProperties.selectedColor,
             'border-width': 3,
-            'width': nodeSizeSelected,
-            'height': nodeSizeSelected,
+            'width': graphProperties.nodeSizeSelected,
+            'height': graphProperties.nodeSizeSelected,
             'transition-property': 'border-width, border-color, color, width, height, border-opacity, background-color',
             'transition-duration' : '0.5s',
             'transition-timing-function': 'ease-in'
@@ -137,4 +116,4 @@ const graphStyles = [
     }
 ];
 
-export default graphStyles;
+export { graphStyles, graphProperties };
