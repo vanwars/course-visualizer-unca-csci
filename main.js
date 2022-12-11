@@ -49,9 +49,9 @@ class CourseVisualizer {
                     // const dependencies = node.data().dependencies;
                     // console.log(dependencies + 2, Math.log2(dependencies + 2) * 100)
                     //let size = Math.log2(dependencies + 2) * 12 + 10; // + dependencies * 30;
-                    let size = 35;
-                    node.css("width", size);
-                    node.css("height", size);
+                    let size = 40;
+                    node.style("width", size);
+                    node.style("height", size);
                 });
             },
             layout: {
@@ -68,8 +68,24 @@ class CourseVisualizer {
     getStyles() {
         return [
             {
+                selector: ':parent',
+                css: {
+                    'background-color': "#F0F0F0",
+                    'border-width': 0.5,
+                    "background-opacity": 0.1,
+                    'text-valign': 'top',
+                    'text-margin-y': '10px',
+                    'font-size': '9px',
+                    'color': '#555',
+                    'font-weight': 'bold',
+                    'label': el =>  {
+                        return el.data().title;
+                    }
+                }
+            },
+            {
                 selector: ':childless',
-                style: {
+                css: {
                     'background-color': element => {
                         return this.colors[this.key];
                     },
@@ -82,32 +98,23 @@ class CourseVisualizer {
                         return element.data().id; //.split(" ")[1];
                     },
                     'text-valign': 'center',
-                    'font-size': '6px'
-                }
-            },
-            {
-                selector: ':parent',
-                style: {
-                    'background-color': "#F0F0F0",
-                    'border-width': 0.5,
-                    "background-opacity": 0.1,
-                    'text-valign': 'bottom',
-                    'font-size': '10px',
-                    'color': '#555',
-                    'font-weight': 'bold',
-                    'label': el =>  {
-                        return el.data().title;
-                    }
+                    'font-size': '7px'
                 }
             },
             {
                 selector: 'edge',
-                style: {
+                css: {
                     'width': 1,
                     'source-arrow-shape': 'triangle',
                     'line-color': '#DDD',
                     'source-arrow-color': '#DDD',
                     'curve-style': 'bezier'
+                }
+            },
+            {
+                selector: '.highlighted',
+                css: {
+                  'background-color': 'red'
                 }
             }
         ];
@@ -118,7 +125,8 @@ class CourseVisualizer {
         cy.edges().forEach(function (edge) {
             edge.style({
                 'line-color': '#EEE',
-                'source-arrow-color': '#DDD'
+                'source-arrow-color': '#DDD',
+                'width': 0.5
             });
         });
         cy.nodes().forEach(this.resetNodeStyle.bind(this));
@@ -217,7 +225,11 @@ class CourseVisualizer {
         });
         
         const data = node.data();
-        data.prerequisites = `<ul><li>${nodes.join("</li><li>")}</li></ul>`;
+        if (nodes.length > 0) {
+            data.prerequisites = `<ul><li>${nodes.join("</li><li>")}</li></ul>`;
+        } else {
+            data.prerequisites = `<p>None</p>`;
+        }
         document.querySelector('.course-info').innerHTML = `
             <div class="course-details">
                 <h2>${data.id.replace("CSCI", "CSCI ")}: ${data.title}</h2>
