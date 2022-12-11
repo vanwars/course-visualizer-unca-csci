@@ -1,10 +1,11 @@
-
-// import elements from "./courses.js";
 import DataManager from "./data-manager.js";
 
 let nodeSize = 40;
 let nodeSizeSelected = 45;
 let selectedColor = '#3c91e6';
+let systemsColor = '#413C58';
+let infoColor = '#6a8e7f';
+let minorColor = '#EFCB68';
 
 class CourseVisualizer {
     
@@ -14,15 +15,14 @@ class CourseVisualizer {
     }
 
     attachEventHandlers () {
-        document.querySelector('select').addEventListener('change', this.draw.bind(this));
+        document.querySelector('select').addEventListener('change', this.filterBySpecialization.bind(this));
     }
 
     async draw() {
-
         this.dataManager = new DataManager();
         const graphData = await this.dataManager.fetchDataFromSheets();
         // console.log(graphData);
-        const d1 = this.getCoursesForSpecialization(graphData);
+        // const d1 = this.filterBySpecialization(graphData);
         document.querySelector('#cy').innerHTML = "";
         this.cy = window.cy = cytoscape({
             container: document.getElementById('cy'),
@@ -30,7 +30,7 @@ class CourseVisualizer {
                 name: 'preset'
             },
             style: this.getStyles(),
-            elements: d1
+            elements: graphData
         });
     
         cy.bind('click', 'node', this.highlightDependencyPath.bind(this));
@@ -123,54 +123,59 @@ class CourseVisualizer {
                     'transition-duration' : '0.5s',
                     'transition-timing-function': 'ease-in'
                 }
+            },
+            {
+                selector: 'node.minor:childless',
+                style: {
+                    'border-color': minorColor,
+                    'background-color': minorColor,
+                    'color': 'white',
+                    'width': nodeSizeSelected,
+                    'height': nodeSizeSelected,
+                    'transition-property': 'border-width, border-color, width, height, border-opacity, background-color',
+                    'transition-duration' : '0.5s',
+                    'transition-timing-function': 'ease-in'
+                }
+            },
+            {
+                selector: 'node.systems:childless',
+                style: {
+                    'border-color': systemsColor,
+                    'background-color': systemsColor,
+                    'color': 'white',
+                    'width': nodeSizeSelected,
+                    'height': nodeSizeSelected,
+                    'transition-property': 'border-width, border-color, width, height, border-opacity, background-color',
+                    'transition-duration' : '0.5s',
+                    'transition-timing-function': 'ease-in'
+                }
+            },
+            {
+                selector: 'node.info:childless',
+                style: {
+                    'border-color': infoColor,
+                    'background-color': infoColor,
+                    'color': 'white',
+                    'width': nodeSizeSelected,
+                    'height': nodeSizeSelected,
+                    'transition-property': 'border-width, border-color, width, height, border-opacity, background-color',
+                    'transition-duration' : '0.5s',
+                    'transition-timing-function': 'ease-in'
+                }
             }
         ];
     }
 
-    resetStyles () {
-        cy.edges().forEach(function (edge) {
-            edge.style({
-                'line-color': '#EEE',
-                'source-arrow-color': '#DDD',
-                'width': 0.5
-            });
+    filterBySpecialization() {
+        this.clearStyling();
+        const key = document.querySelector('select').value;
+        // console.log(key);
+        cy.nodes().forEach(node => {
+            // console.log(key, node.data()[key]);
+            if (node.data()[key]) {
+                node.addClass(key);
+            }
         });
-        cy.nodes().forEach(this.resetNodeStyle.bind(this));
-    }
-
-    getCoursesForSpecialization(elements) {
-        this.key = document.querySelector('select').value;
-        console.log("KEY:", this.key)
-        // console.log(elements, this.key);
-        if (!this.key) {
-            return elements;
-        }
-        const graphInfo = {
-            nodes: [],
-            edges: []
-        };
-        for (const node of elements.nodes) {
-            if (node.data[this.key]) {
-                graphInfo.nodes.push(node);
-            }
-        }
-        for (const edge of elements.edges) {
-            let hasTarget = false;
-            let hasSource = false;
-            for (const node of graphInfo.nodes) {
-                if (node.data.id === edge.data.target) {
-                    hasTarget = true;
-                }
-                if (node.data.id === edge.data.source) {
-                    hasSource = true;
-                }
-            }
-            if (hasTarget && hasSource) {
-                graphInfo.edges.push(edge);
-            }
-        }
-        return graphInfo;
-    
     }
 
     prereqsToHTML(nodeMap) {
@@ -208,10 +213,19 @@ class CourseVisualizer {
         }, 100);
     }
 
-    highlightDependencyPath (evt) {
-        const node = evt.target;
+    clearStyling() {
+        console.log(cy);
+        console.log("clearing styling");
         cy.elements().removeClass("highlighted");
         cy.elements().removeClass("selected");
+        cy.elements().removeClass("minor");
+        cy.elements().removeClass("systems");
+        cy.elements().removeClass("info");
+    }
+
+    highlightDependencyPath (evt) {
+        const node = evt.target;
+        this.clearStyling();
         node.addClass("highlighted");
 
         var dependencies = {};
