@@ -1,5 +1,5 @@
 
-import elements from "./courses.js";
+// import elements from "./courses.js";
 import DataManager from "./data-manager.js";
 
 
@@ -25,18 +25,20 @@ class CourseVisualizer {
     }
 
     attachEventHandlers () {
-        document.querySelector('select').addEventListener('change', this.draw);
+        document.querySelector('select').addEventListener('change', this.draw.bind(this));
     }
 
     async draw() {
 
         this.dataManager = new DataManager();
         const graphData = await this.dataManager.fetchDataFromSheets();
-        console.log(graphData);
-        const d = this.getCoursesForSpecialization(elements);
-        const d1 = graphData;
-        console.log(d);
-        console.log(JSON.stringify(d1));
+        // console.log(graphData);
+        const d1 = this.getCoursesForSpecialization(graphData);
+        // console.log(JSON.stringify(d.edges, null, "  "));
+        // console.log(JSON.stringify(d1.edges, null, "  "));
+        // console.log(JSON.stringify(d.nodes, null, "  "));
+        // console.log(JSON.stringify(d1.nodes, null, "  "));
+        // d1.nodes = d.nodes;
         this.key = document.querySelector('select').value;
         document.querySelector('#cy').innerHTML = "";
         this.cy = window.cy = cytoscape({
@@ -57,7 +59,7 @@ class CourseVisualizer {
             },
     
             style: this.getStyles(),
-            elements: d
+            elements: d1
         });
     
         cy.bind('click', 'node', this.highlightPath.bind(this));
@@ -146,7 +148,9 @@ class CourseVisualizer {
     }
 
     getCoursesForSpecialization(elements) {
-        console.log(elements, this.key);
+        this.key = document.querySelector('select').value;
+        console.log("KEY:", this.key)
+        // console.log(elements, this.key);
         if (!this.key) {
             return elements;
         }

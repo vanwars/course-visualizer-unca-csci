@@ -3,7 +3,7 @@ export default class DataManager {
         this.key = 'AIzaSyDsr4u1uupvnmDSfJdfgHZN2IWROiihlP8';
         this.spreadsheetId = '1Q11Q_uJxCsnwMSpjMn3kCQTzRIXB0NkGBeQQL5CO6y4';
         this.rawData = {};
-        this.formattedData = {};
+        this.formattedData = [];
     }
 
     async fetchDataFromSheets () {
@@ -14,11 +14,11 @@ export default class DataManager {
         this.rawData.values.forEach(row => {
             const item = {};
             row.forEach((cell, i) => {
-                cell = cell === 'TRUE' ? true : cell;
-                cell = cell === 'FALSE' ? false : cell;
+                cell = (cell === 'TRUE') ? true : cell;
+                cell = (cell === 'FALSE') ? false : cell;
                 item[keys[i]] = cell;
             }) 
-            this.formattedData[item.id] = item;
+            this.formattedData.push(item);
             if (item.areas) {
                 item.areas = item.areas.split(",").map(tag => tag.trim()).filter(tag => tag !== '');
             } else {
@@ -40,17 +40,18 @@ export default class DataManager {
             nodes: [],
             edges: []
         }
-        for (const key in this.formattedData) {
-            const course = this.formattedData[key];
+        for (const course of this.formattedData) {
             const node = {
-                data: {
-                    id: course.id,
-                    parent: course.parent,
-                    title: course.title
-                }
+                data: course
             };
+            if (course.parent && course.parent !== "") {
+                node.data.parent = course.parent;
+            }
             if (course.x) {
-                node.position = { x: course.x, y: course.y }
+                node.position = { 
+                    x: parseInt(course.x), 
+                    y: parseInt(course.y) 
+                }
             }
             graph.nodes.push(node);
             course.prerequisites.forEach(prereq => {
