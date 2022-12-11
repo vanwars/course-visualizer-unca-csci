@@ -10,7 +10,7 @@ body * {
 
 main {
     display: grid;
-    grid-template-columns: 75vw auto;
+    grid-template-columns: 70vw auto;
     min-height: 100vh;
 }
 

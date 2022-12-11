@@ -190,6 +190,23 @@ class CourseVisualizer {
     
     }
 
+    prereqsToHTML(nodeMap) {
+        // keeps the prerequisites organized based 
+        // on distance from source (key is the distance)
+        // in BFS traversal:
+        let nodes = [];
+        for (const key in nodeMap) {
+            nodeMap[key].sort();
+            nodeMap[key].reverse();
+            nodes = nodes.concat(nodeMap[key]);
+        }
+        if (nodes.length > 0) {
+            return `<ul><li>${nodes.join("</li><li>")}</li></ul>`;
+        } else {
+            return `<p>None</p>`;
+        }
+    }
+
     highlightPath (evt) {
         // const selectionColor = '#e4ff1a';
         const selectionColor = '#3c91e6';
@@ -201,13 +218,17 @@ class CourseVisualizer {
             'color': 'white',
             'border-width': 3,
         });
-        var nodes = [];
+        var nodes = {};
         cy.elements().dfs({
             roots: `#${evt.target.id()}`,
             visit: function(node, edge, u, i, depth) {
                 if (edge) {
                     var courseID = node.data().id.replace("CSCI", "CSCI ");
-                    nodes.push(courseID);
+                    if (!nodes[depth]) {
+                        nodes[depth] = [];
+                    }
+                    nodes[depth].push(courseID);
+                    //nodes.push(courseID + "(" + depth + ")");
                     edge.style({
                         'line-color': selectionColor,
                         'source-arrow-color': selectionColor,
@@ -216,8 +237,6 @@ class CourseVisualizer {
                     node.style({
                         'border-color': selectionColor,
                         'border-width': 3
-                        // 'color': 'black',
-                        // "background-opacity": 1,
                     })
                 }
             },
@@ -225,11 +244,6 @@ class CourseVisualizer {
         });
         
         const data = node.data();
-        if (nodes.length > 0) {
-            data.prerequisites = `<ul><li>${nodes.join("</li><li>")}</li></ul>`;
-        } else {
-            data.prerequisites = `<p>None</p>`;
-        }
         document.querySelector('.course-info').innerHTML = `
             <div class="course-details">
                 <h2>${data.id.replace("CSCI", "CSCI ")}: ${data.title}</h2>
@@ -239,7 +253,7 @@ class CourseVisualizer {
                 ${data.info ? '<span class="info">Information Systems </span>' : ''}
                 ${data.minor ? '<span class="minor">CS Minor</span>' : ''}
                 <h3>Prerequisites</h3>
-                <p>${data.prerequisites}</p>
+                <p>${this.prereqsToHTML(nodes)}</p>
             </div>
         `;
         setTimeout(function () {
