@@ -36,8 +36,9 @@ class CourseVisualizer {
         const key = document.querySelector('select').value;
         cy.nodes().forEach(node => {
             if (node.data()[key]) {
+                // if the filter matches, set the featured color
+                // to the color associated with the match.
                 graphProperties['featured'] = graphProperties[key];
-                console.log(graphProperties['featured']);
                 node.addClass('featured');
             }
         });
@@ -96,9 +97,7 @@ class CourseVisualizer {
         console.log(cy);
         console.log("clearing styling");
         this.clearHighlights();
-        cy.elements().removeClass("minor");
-        cy.elements().removeClass("systems");
-        cy.elements().removeClass("info");
+        cy.elements().removeClass("featured");
     }
 
     clearHighlights () {
