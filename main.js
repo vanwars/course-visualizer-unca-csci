@@ -2,6 +2,7 @@ import DataManager from "./data-manager.js";
 
 let nodeSize = 40;
 let nodeSizeSelected = 45;
+let fontSizeSelected = '9px';
 let selectedColor = '#3c91e6';
 let systemsColor = '#413C58';
 let infoColor = '#6a8e7f';
@@ -34,6 +35,7 @@ class CourseVisualizer {
         });
     
         cy.bind('click', 'node', this.highlightDependencyPath.bind(this));
+        cy.bind('click', this.clearIfNotNode.bind(this));
     }
 
     getStyles() {
@@ -88,6 +90,48 @@ class CourseVisualizer {
                 }
             },
             {
+                selector: 'node.minor:childless',
+                style: {
+                    'border-color': minorColor,
+                    'background-color': minorColor,
+                    'color': 'white',
+                    'font-size': fontSizeSelected,
+                    'width': nodeSizeSelected,
+                    'height': nodeSizeSelected,
+                    'transition-property': 'border-width, border-color, width, height, font-size, background-color',
+                    'transition-duration' : '0.5s',
+                    'transition-timing-function': 'ease-in'
+                }
+            },
+            {
+                selector: 'node.systems:childless',
+                style: {
+                    'border-color': systemsColor,
+                    'background-color': systemsColor,
+                    'color': 'white',
+                    'width': nodeSizeSelected,
+                    'height': nodeSizeSelected,
+                    'font-size': fontSizeSelected,
+                    'transition-property': 'border-width, border-color, width, height, font-size, background-color',
+                    'transition-duration' : '0.5s',
+                    'transition-timing-function': 'ease-in'
+                }
+            },
+            {
+                selector: 'node.info:childless',
+                style: {
+                    'border-color': infoColor,
+                    'background-color': infoColor,
+                    'color': 'white',
+                    'width': nodeSizeSelected,
+                    'height': nodeSizeSelected,
+                    'font-size': fontSizeSelected,
+                    'transition-property': 'border-width, border-color, width, height, font-size, background-color',
+                    'transition-duration' : '0.5s',
+                    'transition-timing-function': 'ease-in'
+                }
+            },
+            {
                 selector: 'node.highlighted',
                 style: {
                     'border-color': selectedColor,
@@ -117,45 +161,6 @@ class CourseVisualizer {
                 style: {
                     'border-color': selectedColor,
                     'border-width': 3,
-                    'width': nodeSizeSelected,
-                    'height': nodeSizeSelected,
-                    'transition-property': 'border-width, border-color, width, height, border-opacity, background-color',
-                    'transition-duration' : '0.5s',
-                    'transition-timing-function': 'ease-in'
-                }
-            },
-            {
-                selector: 'node.minor:childless',
-                style: {
-                    'border-color': minorColor,
-                    'background-color': minorColor,
-                    'color': 'white',
-                    'width': nodeSizeSelected,
-                    'height': nodeSizeSelected,
-                    'transition-property': 'border-width, border-color, width, height, border-opacity, background-color',
-                    'transition-duration' : '0.5s',
-                    'transition-timing-function': 'ease-in'
-                }
-            },
-            {
-                selector: 'node.systems:childless',
-                style: {
-                    'border-color': systemsColor,
-                    'background-color': systemsColor,
-                    'color': 'white',
-                    'width': nodeSizeSelected,
-                    'height': nodeSizeSelected,
-                    'transition-property': 'border-width, border-color, width, height, border-opacity, background-color',
-                    'transition-duration' : '0.5s',
-                    'transition-timing-function': 'ease-in'
-                }
-            },
-            {
-                selector: 'node.info:childless',
-                style: {
-                    'border-color': infoColor,
-                    'background-color': infoColor,
-                    'color': 'white',
                     'width': nodeSizeSelected,
                     'height': nodeSizeSelected,
                     'transition-property': 'border-width, border-color, width, height, border-opacity, background-color',
@@ -195,6 +200,13 @@ class CourseVisualizer {
         }
     }
 
+    clearDetailPanel () {
+        document.querySelector('.course-info').innerHTML = `
+            <h2>Course Explorer</h2>
+            <p>Click a class to learn more about it</p>
+        `;
+    }
+
     displayCourseInfo (data, dependencies) {
         document.querySelector('.course-info').innerHTML = `
             <div class="course-details">
@@ -213,19 +225,33 @@ class CourseVisualizer {
         }, 100);
     }
 
-    clearStyling() {
+    clearIfNotNode (evt) {
+        if (evt.target === cy) {
+            this.clearHighlights();
+            this.clearDetailPanel();
+        }
+    }
+
+    clearStyling () {
         console.log(cy);
         console.log("clearing styling");
-        cy.elements().removeClass("highlighted");
-        cy.elements().removeClass("selected");
+        this.clearHighlights();
         cy.elements().removeClass("minor");
         cy.elements().removeClass("systems");
         cy.elements().removeClass("info");
     }
 
+    clearHighlights () {
+        cy.elements().removeClass("highlighted");
+        cy.elements().removeClass("selected");
+    }
+
     highlightDependencyPath (evt) {
         const node = evt.target;
-        this.clearStyling();
+        if (!node.isChildless()) {
+            return;
+        }
+        this.clearHighlights();
         node.addClass("highlighted");
 
         var dependencies = {};
