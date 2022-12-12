@@ -20,9 +20,10 @@ const graphStyles = [
     {
         selector: ':parent',
         style: {
-            // 'background-color': "#EEE",
-            "background-opacity": 0,
-            'border-width': 0.5,
+            'background-color': "#F0F0F0",
+            "background-opacity": 0.3,
+            'border-width': 4,
+            'border-color': '#F0F0F0',
             'text-valign': 'top',
             'text-margin-y': '10px',
             'font-size': '9px',
@@ -30,7 +31,10 @@ const graphStyles = [
             'font-weight': 'bold',
             'label': el =>  {
                 return el.data().title;
-            }
+            },
+            'transition-property': 'border-width, border-color, width, height, border-opacity, background-color',
+            'transition-duration' : '0.5s',
+            'transition-timing-function': 'ease-in'
         }
     },
     {
