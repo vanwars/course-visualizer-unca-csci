@@ -54,11 +54,13 @@ class CourseVisualizer {
             nodeMap[key].reverse();
             nodes = nodes.concat(nodeMap[key]);
         }
+        let html = `<h3>Prerequisites</h3>`;
         if (nodes.length > 0) {
-            return `<ul><li>${nodes.join("</li><li>")}</li></ul>`;
+            html += `<ul><li>${nodes.join("</li><li>")}</li></ul>`;
         } else {
-            return `<p>None</p>`;
+            html += `<p>None</p>`;
         }
+        return html;
     }
 
     clearDetailPanel () {
@@ -68,22 +70,61 @@ class CourseVisualizer {
         `;
     }
 
-    displayCourseInfo (data, dependencies) {
+    displayCourseInfo (node, dependencies) {
+        const data = node.data();
         document.querySelector('.course-info').innerHTML = `
             <div class="course-details">
                 <h2>${data.id.replace("CSCI", "CSCI ")}: ${data.title}</h2>
                 <p>${data.description ? data.description : 'Some description of the course...'}</p>
-                ${data.systems || data.info || data.minor ? '<h3>Required For</h3>' : ''}
-                ${data.systems ? '<span class="systems">Computer Systems</span>' : ''}
-                ${data.info ? '<span class="info">Information Systems </span>' : ''}
-                ${data.minor ? '<span class="minor">CS Minor</span>' : ''}
-                <h3>Prerequisites</h3>
+                <p><strong>Credit Hours:</strong> ${data.credit_hours}</p>
+                ${this.renderDegreeClassifications(node)}
                 <p>${this.prereqsToHTML(dependencies)}</p>
+                
             </div>
         `;
         setTimeout(function () {
             document.querySelector('.course-details').classList.add('visible');
         }, 100);
+    }
+
+    renderDegreeClassifications (node) {
+        const data = node.data();
+        const parent = node.parent();
+        const parentData = parent.data();
+        const grandparent = node.parent().parent();
+        const grandparentData = grandparent.data();
+        const isSystemsRequirement = data.systems;
+        const isInfoRequirement = data.info;
+        const isMinorRequirement = data.minor;
+        const isSystemsCategory = (
+            (parentData !== undefined && parentData.systems) || 
+            (grandparentData !== undefined && grandparentData.systems)
+        );
+        const isInfoCategory = (
+            (parentData !== undefined && parentData.info) || 
+            (grandparentData !== undefined && grandparentData.info)
+        );
+        const isMinorCategory = (
+            (parentData !== undefined && parentData.minor) || 
+            (grandparentData !== undefined && grandparentData.minor)
+        );
+        
+        let html = `
+            ${isSystemsRequirement || isInfoRequirement || isMinorRequirement ? `<h3>Required For</h3>` : ''}
+            ${isSystemsRequirement ? '<span class="systems">Computer Systems</span>' : ''}
+            ${isInfoRequirement ? '<span class="info">Information Systems </span>' : ''}
+            ${isMinorRequirement ? '<span class="minor">CS Minor</span>' : ''}
+        `;
+        if (isSystemsCategory || isInfoCategory || isMinorCategory) {
+            html += `
+                <h3>Meets a ${data.department} Requirement For</h3>
+                ${isSystemsCategory ? '<span class="systems">Computer Systems</span>' : ''}
+                ${isInfoCategory ? '<span class="info">Information Systems </span>' : ''}
+                ${isMinorCategory ? '<span class="minor">CS Minor</span>' : ''}
+                <p>Note: There may be multiple ways to meet this ${data.department} requirement.</p>
+            `;
+        }
+        return html;
     }
 
     clearIfNotNode (evt) {
@@ -145,7 +186,7 @@ class CourseVisualizer {
             });
         });
 
-        this.displayCourseInfo(node.data(), dependencies);
+        this.displayCourseInfo(node, dependencies);
     }
 }
 

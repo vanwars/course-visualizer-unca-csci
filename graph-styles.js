@@ -13,9 +13,9 @@ const graphStyles = [
     {
         selector: ':parent',
         style: {
-            'background-color': "#F0F0F0",
+            // 'background-color': "#EEE",
+            "background-opacity": 0,
             'border-width': 0.5,
-            "background-opacity": 0.1,
             'text-valign': 'top',
             'text-margin-y': '10px',
             'font-size': '9px',
@@ -60,7 +60,7 @@ const graphStyles = [
         }
     },
     {
-        selector: 'node.featured:childless',
+        selector: 'node.featured',
         style: {
             'border-color': () => {
                 return graphProperties.featured
@@ -68,11 +68,27 @@ const graphStyles = [
             'background-color': () => {
                 return graphProperties.featured
             },
+            'background-opacity': 1,
             'color': '#FFF',
             'font-size': graphProperties.fontSizeSelected,
             'width': graphProperties.nodeSizeSelected,
             'height': graphProperties.nodeSizeSelected,
-            'transition-property': 'border-width, border-color, color, width, height, font-size, background-color',
+            'transition-property': 'border-width, border-color, background-opacity, color, width, height, font-size, background-color',
+            'transition-duration' : '0.5s',
+            'transition-timing-function': 'ease-in'
+        }
+    },
+    {
+        selector: 'node.featured node:parent',
+        style: {
+            "background-opacity": 0,
+            // 'border-color': () => {
+            //     return graphProperties.featured
+            // },
+            'color': () => {
+                return graphProperties.featured
+            },
+            'transition-property': 'border-width, border-color, background-opacity, color, width, height, font-size, background-color',
             'transition-duration' : '0.5s',
             'transition-timing-function': 'ease-in'
         }
