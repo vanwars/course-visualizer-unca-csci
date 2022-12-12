@@ -93,6 +93,7 @@ const graphStyles = [
         selector: 'node.featured node:parent',
         style: {
             "background-opacity": 0,
+            "border-width": 0.5,
             // 'border-color': () => {
             //     return graphProperties.featured
             // },
