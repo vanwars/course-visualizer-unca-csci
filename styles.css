@@ -19,9 +19,10 @@ h1, h2, h3 {
     margin-bottom: 10px;
 }
 
-p, li {
-    line-height: 1.6em;
+#info p, li {
+    line-height: 1.3em;
     font-size: 1.15em;
+    margin-top: 0px;
 }
 
 select {
@@ -49,7 +50,7 @@ select {
     margin-bottom: 10px;
     border-radius: 5px;
     padding: 5px 10px;
-    background-color: #CCC;
+    background-color: #DDD;
     font-size: 0.9em;
     text-transform: uppercase;
 }

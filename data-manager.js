@@ -24,6 +24,9 @@ export default class DataManager {
             } else {
                 item.areas = [];
             }
+            item.areas.forEach(area => {
+                item[`area_${area.replace(' ', '_')}`] = true;
+            });
             if (item.prerequisites  ) {
                 item.prerequisites = item.prerequisites.split(",").map(prereq => prereq.trim()).filter(prereq => prereq !== '');
             } else {

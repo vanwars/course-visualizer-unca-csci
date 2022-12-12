@@ -6,6 +6,13 @@ const graphProperties = {
     systems: '#413C58',
     info: '#6a8e7f',
     minor: '#EFCB68',
+    area_games: '#7F9C90',
+    area_systems: '#EBBC4E',
+    area_virtual_reality: '#E6A65D',
+    area_software: '#A6192E',
+    area_data_science: '#C26E60',
+    area_hci: '#4298B5',
+    area_theory: '#7C4D3A',
     featured: '#EEE'
 }
 

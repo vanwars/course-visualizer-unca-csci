@@ -63,6 +63,16 @@ class CourseVisualizer {
         return html;
     }
 
+    areasToHTML(data) {
+        if (data.areas.length > 0) {
+            return `
+                <h3>Areas</h3>
+                <span>${data.areas.join('</span><span>')}</span>
+            `;
+        }
+        return '';
+    }
+
     clearDetailPanel () {
         document.querySelector('.course-info').innerHTML = `
             <h2>Course Explorer</h2>
@@ -79,7 +89,7 @@ class CourseVisualizer {
                 <p><strong>Credit Hours:</strong> ${data.credit_hours}</p>
                 ${this.renderDegreeClassifications(node)}
                 <p>${this.prereqsToHTML(dependencies)}</p>
-                
+                ${this.areasToHTML(data)}
             </div>
         `;
         setTimeout(function () {
