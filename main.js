@@ -113,21 +113,36 @@ class CourseVisualizer {
         this.clearHighlights();
         node.addClass("highlighted");
 
-        var dependencies = {};
+        const dependencies = {};
+        const dependencyList = [];
         cy.elements().dfs({
             roots: `#${evt.target.id()}`,
             visit: function(node, edge, u, i, depth) {
                 if (edge) {
-                    var courseID = node.data().id.replace("CSCI", "CSCI ");
+                    var courseID = node.data().id;
                     if (!dependencies[depth]) {
                         dependencies[depth] = [];
                     }
                     dependencies[depth].push(courseID);
+                    dependencyList.push(node);
                     edge.addClass('selected');
                     node.addClass('selected');
                 }
             },
             directed: true
+        });
+
+        // hack to ensure that all edges are highlighted (not just DFS path);
+        dependencyList.forEach(node => { 
+            const edges = node.connectedEdges();
+            edges.forEach(edge => {
+                const connectedNodes = edge.connectedNodes();
+                connectedNodes.forEach(connectedNode => {
+                    if (connectedNode != node && dependencyList.includes(connectedNode)) {
+                        edge.addClass('selected');
+                    }
+                });
+            });
         });
 
         this.displayCourseInfo(node.data(), dependencies);
